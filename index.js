@@ -165,7 +165,7 @@ $(function () {
             $("#selectFuncao").val("0");
             
             // Limpeza da mensagem de erro
-            $("#msg-erro").html("");
+            $("#msgErro").html("");
 
             populaTabela();
         }  
