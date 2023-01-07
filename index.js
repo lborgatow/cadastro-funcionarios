@@ -97,62 +97,77 @@ $(function () {
     $("#btnSalvar").click(function () {
         // Evento click do botão Salvar
 
-        let _id = $("#hdID").val();
-        let NomeCompleto = $("#txtNomeCompleto").val();
-        let Sexo = $("#selectSexo").val();
-        let CPF = formataCPF($("#txtCPF").val());
-        let DataNascimento = new Date($("#txtDataNascimento").val()).toLocaleDateString("pt-br", { timeZone: "UTC" });
-        let Idade = calculaIdade(DataNascimento);
-        let Funcao = $("#selectFuncao").val();
-
-        // Se o _id (hidden input) for nulo, então é um registro novo
-        if (!_id || _id == "0") {
-            let registro = {};
-
-            registro.NomeCompleto = NomeCompleto;
-            registro.Sexo = Sexo;
-            registro.CPF = CPF;
-            registro.DataNascimento = DataNascimento;
-            registro.Idade = Idade;
-            registro.Funcao = Funcao;
-
-            // Condicional para preencher ID automaticamente, evitando repetições
-            if (dados.length > 0) {
-                registro.ID = dados[dados.length - 1].ID + 1;
-                dados.push(registro);
-            } else {
-                registro.ID = 1;
-                dados.push(registro);
-            }
-
-        }
-        // Senão é uma edição de um registro já existente
-        else {
-            dados.forEach(function (item) {
-                if (item.ID == _id) {
-                    item.NomeCompleto = NomeCompleto;
-                    item.Sexo = Sexo;
-                    item.CPF = CPF;
-                    item.DataNascimento = DataNascimento;
-                    item.Idade = Idade;
-                    item.Funcao = Funcao;
+        // Se um dos campos estiverem vazios, emite uma mensagem de erro
+        if ($("#txtNomeCompleto").val() == "") {
+            $("#msgErro").html('<div class="alert alert-danger" role="alert">Necessário prencher o campo "Nome Completo"!</div>');
+        } else if ($("#txtCPF").val() == "") {
+            $("#msgErro").html('<div class="alert alert-danger" role="alert">Necessário prencher o campo "CPF"!</div>');
+        } else if (new Date($("#txtDataNascimento").val()).toLocaleDateString("pt-br", { timeZone: "UTC" }) == "Invalid Date") {
+            $("#msgErro").html('<div class="alert alert-danger" role="alert">Necessário prencher o campo "Data de Nascimento"!</div>');
+        } else if ($("#selectSexo").val() == null) {
+            $("#msgErro").html('<div class="alert alert-danger" role="alert">Necessário prencher o campo "Sexo"!</div>');
+        } else if ($("#selectFuncao").val() == null) {
+            $("#msgErro").html('<div class="alert alert-danger" role="alert">Necessário prencher o campo "Função"!</div>');
+        } else {
+            let _id = $("#hdID").val();
+            let NomeCompleto = $("#txtNomeCompleto").val();
+            let Sexo = $("#selectSexo").val();
+            let CPF = formataCPF($("#txtCPF").val());
+            let DataNascimento = new Date($("#txtDataNascimento").val()).toLocaleDateString("pt-br", { timeZone: "UTC" });
+            let Idade = calculaIdade(DataNascimento);
+            let Funcao = $("#selectFuncao").val();
+    
+            // Se o _id (hidden input) for nulo, então é um registro novo
+            if (!_id || _id == "0") {
+                let registro = {};
+    
+                registro.NomeCompleto = NomeCompleto;
+                registro.Sexo = Sexo;
+                registro.CPF = CPF;
+                registro.DataNascimento = DataNascimento;
+                registro.Idade = Idade;
+                registro.Funcao = Funcao;
+    
+                // Condicional para preencher ID automaticamente, evitando repetições
+                if (dados.length > 0) {
+                    registro.ID = dados[dados.length - 1].ID + 1;
+                    dados.push(registro);
+                } else {
+                    registro.ID = 1;
+                    dados.push(registro);
                 }
-            });
-        }
+    
+            }
+            // Senão é uma edição de um registro já existente
+            else {
+                dados.forEach(function (item) {
+                    if (item.ID == _id) {
+                        item.NomeCompleto = NomeCompleto;
+                        item.Sexo = Sexo;
+                        item.CPF = CPF;
+                        item.DataNascimento = DataNascimento;
+                        item.Idade = Idade;
+                        item.Funcao = Funcao;
+                    }
+                });
+            }
+    
+            alert("Registro salvo com sucesso!");
+            $("#modalRegistro").modal("hide");
+    
+            // Limpeza dos campos
+            $("#hdID").val("0");
+            $("#txtNomeCompleto").val("");
+            $("#selectSexo").val("0");
+            $("#selectSexo").val("0");
+            $("#txtCPF").val("");
+            $("#txtDataNascimento").val("");
+            $("#selectFuncao").val("0");
+            
+            // Limpeza da mensagem de erro
+            $("#msg-erro").html("");
 
-        alert("Registro salvo com sucesso!");
-        $("#modalRegistro").modal("hide");
-
-        // Limpeza dos campos
-        $("#hdID").val("0");
-        $("#txtNomeCompleto").val("");
-        $("#selectSexo").val("0");
-        $("#selectSexo").val("0");
-        $("#txtCPF").val("");
-        $("#txtDataNascimento").val("");
-        $("#selectFuncao").val("0");
-
-        populaTabela();
-  
+            populaTabela();
+        }  
     });
 })
