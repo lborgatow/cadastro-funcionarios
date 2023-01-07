@@ -23,6 +23,14 @@ function calculaIdade(dataNascimento) {
     return quantos_anos < 0 ? 0 : quantos_anos;
 }
 
+function formataCPF(cpf){
+    // Retira os caracteres indesejados
+    cpf = cpf.replace(/[^\d]/g, "");
+    
+    // Realiza a formatação e retorna o CPF
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  }
+
 function editaRegistro(id) {
     $("#modalRegistro").modal("show");
 
@@ -92,7 +100,7 @@ $(function () {
         let _id = $("#hdID").val();
         let NomeCompleto = $("#txtNomeCompleto").val();
         let Sexo = $("#selectSexo").val();
-        let CPF = $("#txtCPF").val();
+        let CPF = formataCPF($("#txtCPF").val());
         let DataNascimento = new Date($("#txtDataNascimento").val()).toLocaleDateString("pt-br", { timeZone: "UTC" });
         let Idade = calculaIdade(DataNascimento);
         let Funcao = $("#selectFuncao").val();
