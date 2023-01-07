@@ -23,6 +23,36 @@ function calculaIdade(dataNascimento) {
     return quantos_anos < 0 ? 0 : quantos_anos;
 }
 
+function editaRegistro(id) {
+    $("#modalRegistro").modal("show");
+
+    dados.forEach(function (item) {
+        if (item.ID == id) {
+            $("#hdID").val(item.ID);
+            $("#txtNomeCompleto").val(item.NomeCompleto);
+            $("#selectSexo").val(item.Sexo);
+            $("#txtCPF").val(item.CPF);
+            $("#txtDataNascimento").val(item.DataNascimento.substr(6, 4) + "-" + 
+                item.DataNascimento.substr(3, 2) + "-" + item.DataNascimento.substr(0, 2));
+            $("#selectFuncao").val(item.Funcao);
+        }
+    });
+}
+
+function apagaRegistro(id) {
+    let _confirm = confirm("Deseja realmente excluir este registro?");
+
+    if (_confirm) {
+        for (let i = 0; i < dados.length; i++) {
+            if (dados[i].ID == id) {
+                dados.splice(i, 1);
+            }
+        }
+
+        populaTabela();
+    }
+}
+
 function populaTabela() {
     if (Array.isArray(dados)) {
 
@@ -39,6 +69,8 @@ function populaTabela() {
                 <td>${item.DataNascimento}</td>
                 <td>${item.Idade}</td>
                 <td>${item.Funcao}</td>
+                <td><button type="button" class="btn btn-primary" onclick="javascript:editaRegistro(${item.ID})"><i class="fa fa-edit"></i></button></td>
+                <td><button type="button" class="btn btn-danger" onclick="javascript:apagaRegistro(${item.ID});"><i class="fa fa-trash"></i></button></td>
             </tr>`);
         });
     }
